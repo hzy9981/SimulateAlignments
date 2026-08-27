@@ -1,5 +1,7 @@
 # BetaAlign Reproduction Guide
 
+[中文版本](README_REPRODUCTION_ZH.md)
+
 This guide records the reproducible workflow verified in this repository on Windows with WSL2 (Ubuntu). It covers local dependency installation, data generation, Fairseq preprocessing, and a CPU training smoke test.
 
 Run the commands below from the repository root in WSL Bash. The workflow uses repository-local environments and does not require administrator privileges.
