@@ -371,7 +371,7 @@ def msa_bias_correction(skip_config, clean_run, res_path,
 			# continuous_write(interation=i,
 			# 				file_path=f'{res_path}{f"indelible_sparta_{model_type}.txt"}',
 			# 				to_write=indelible_sparta_msa)
-			return indelible_sparta_msa
+			# return indelible_sparta_msa
 			# run mafft on unaligned sequences.
 			realigned_msa = reconstruct_msa(res_path=res_path, 
 											unaligned_msa=unaligned_sub_sim_msa,

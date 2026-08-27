@@ -29,9 +29,14 @@ os.chdir(pipeline_path)
 #%%
 
 
-def pipeline(skip_config, res_dir, clean_run,msa_filename,tree_filename,pipeline_path='/bioseq/spartaabc/pipeline/',
+def pipeline(skip_config, res_dir, clean_run,msa_filename,tree_filename,pipeline_path=None,
 			 minIR=0,maxIR=0.05, minAVal=1.001, maxAVal=2.0,op_sys='linux',verbose=0, filter_p=(0.9,15),
 			 b_num_top=100, num_alignments=200, submodel_params="amino", num_simulations=100000, num_burnin=10000):
+	
+	if pipeline_path is None:
+		pipeline_path = os.getcwd()
+	if not pipeline_path.endswith('/'):
+		pipeline_path += '/'
 	
 	res_dir = os.path.join(res_dir, '')
 	if os.path.isdir(res_dir + "logs/"):

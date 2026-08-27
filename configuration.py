@@ -116,8 +116,9 @@ class inference_config:
 
 if __name__ == "__main__":
 	sparta_config = get_sparta_config()
-	sparta_config["_inputRealMSAFile"] = "/home/elyawy/development/Msc/Thesis/Working_dir/SpartaABC/results/msa.fasta"
-	sparta_config["_inputTreeFileName"] = "/home/elyawy/development/Msc/Thesis/Working_dir/SpartaABC/results/RAxML_tree.tree"
+	cwd = os.getcwd()
+	sparta_config["_inputRealMSAFile"] = os.path.join(cwd, "results/msa.fasta")
+	sparta_config["_inputTreeFileName"] = os.path.join(cwd, "results/RAxML_tree.tree")
 	with open("test.conf",'w') as f:
 		for key in get_sparta_config():
 			to_write = f'{key} {sparta_config[key]}\n'

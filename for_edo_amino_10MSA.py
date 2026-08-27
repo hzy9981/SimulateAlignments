@@ -21,7 +21,7 @@ input_maxIR = float(sys.argv[9])
 input_minAVal = float(sys.argv[10])
 input_maxAVal = float(sys.argv[11])
 
-pipeline_path = f"/a/home/cc/tree/taucc/students/lifesci/edodotan/projects/deeplearning_transformer_alignment/DeepLearningMSA/sparta/"
+pipeline_path = os.getcwd() + "/"
 res_path = f"{path}res_{flag}"
 data_set_path = f"{path}data_set_{flag}"
 

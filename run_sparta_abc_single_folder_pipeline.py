@@ -39,8 +39,12 @@ def create_sims(data_name,verbose=1,res_dir='results/',
 				data_dir='data',msa_filename='ref_msa.aa.fasta',
 				tree_filename='RAxML_tree.tree',
 				minIR = 0, maxIR = 0.05, minAVal = 1.001, maxAVal = 2.0, num_alignments=200,
-				cwd='/groups/pupko/gilloe/spartaABC/code/abc_nn/',
+				cwd=None,
 				op_sys='linux', num_simulations=100000, num_burnin=10000):
+	if cwd is None:
+		cwd = os.getcwd()
+	if not cwd.endswith('/'):
+		cwd += '/'
 	logger.info('Inside create_sims function.')
 
 	out_dir = res_dir + data_name
@@ -98,8 +102,12 @@ def create_sims_from_data(data_name,ow_flag=False,verbose=1,
 						  tree_filename='RAxML_tree.tree',
 						  minAVal = 1.001, maxAVal = 2.0,
 						  minIR = 0, maxIR = 0.05, num_alignments=200,
-						  cwd='/groups/pupko/gilloe/spartaABC/code/abc_nn/',
+						  cwd=None,
 						  op_sys='linux', num_simulations=100000, num_burnin=10000):
+	if cwd is None:
+		cwd = os.getcwd()
+	if not cwd.endswith('/'):
+		cwd += '/'
 
 	if not res_dir.endswith('/'):
 		res_dir += '/'
