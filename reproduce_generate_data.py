@@ -2,7 +2,7 @@ import os
 import random
 import subprocess
 import re
-from Bio import SeqIO
+from Bio import AlignIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
@@ -11,15 +11,17 @@ def generate_indelible_config(res_path, mode="amino", num_seqs=10, seq_len=300, 
     config = []
     if mode == "amino":
         config.append("[TYPE] AMINOACID 2")
-        config.append("[MODEL] modelname WAG")
+        config.append("[MODEL] modelname")
+        config.append("[submodel] WAG")
     else:
         config.append("[TYPE] NUCLEOTIDE 2")
+        config.append("[MODEL] modelname")
         # Standard GTR params from paper context if needed, otherwise JC/HKY
-        config.append("[MODEL] modelname GTR 0.44 0.08 0.11 0.10 0.0002")
-        config.append("[STATEFREQ] 0.25 0.25 0.25 0.25")
+        config.append("[submodel] GTR 0.44 0.08 0.11 0.10 0.0002")
+        config.append("[statefreq] 0.25 0.25 0.25 0.25")
     
-    config.append("[INDELMODEL] pow_model POW 1.7 500")
-    config.append(f"[INDELRATE] {indel_rate}")
+    config.append("[indelmodel] POW 1.7 500")
+    config.append(f"[indelrate] {indel_rate:.9f}")
     
     # Generate a random tree with num_seqs leaves
     # Using a simple star-like tree for simulation diversity, or we can use a library
@@ -29,15 +31,16 @@ def generate_indelible_config(res_path, mode="amino", num_seqs=10, seq_len=300, 
     tree_str = "(" + ",".join([f"{l}:0.1" for l in leaves]) + ");"
     config.append(f"[TREE] mytree {tree_str}")
     
-    config.append(f"[PARTITIONS] mypart [mytree modelname {seq_len}]")
+    config.append("[PARTITIONS] mypart")
+    config.append(f"[mytree modelname {seq_len}]")
     config.append("[EVOLVE] mypart 1 output") # 1 MSA per run to simplify parsing
     
     with open(os.path.join(res_path, "control.txt"), "w") as f:
         f.write("\n".join(config) + "\n ") # Space at end for INDELible
 
-def parse_msa(fasta_path):
-    """Parses a FASTA file and returns unaligned sequences and the MSA rows."""
-    records = list(SeqIO.parse(fasta_path, "fasta"))
+def parse_msa(alignment_path):
+    """Parses a PHYLIP alignment and returns unaligned sequences and MSA rows."""
+    records = AlignIO.read(alignment_path, "phylip-relaxed")
     msa_rows = [str(r.seq).upper() for r in records]
     unaligned = [r.replace("-", "") for r in msa_rows]
     return unaligned, msa_rows
@@ -82,9 +85,9 @@ def run_simulation(output_dir, num_samples=100, mode="amino"):
             # but we provide the script as requested for reproduction.
             subprocess.run(["indelible"], cwd=tmp_dir, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             
-            fasta_out = os.path.join(tmp_dir, "output.fas")
-            if os.path.exists(fasta_out):
-                unaligned, msa = parse_msa(fasta_out)
+            alignment_out = os.path.join(tmp_dir, "output_TRUE.phy")
+            if os.path.exists(alignment_out):
+                unaligned, msa = parse_msa(alignment_out)
                 src, tgt = encode_betaalign(unaligned, msa)
                 source_file.write(src + "\n")
                 target_file.write(tgt + "\n")
